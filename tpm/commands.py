@@ -1,10 +1,11 @@
-
+ 
 import time
 from typing import Callable, TypeVar
 
 import mcdreforged.api.all as MCDR
 
 from kpi.command import *
+from kpi.utils import get_server_instance
 
 from .configs import *
 from .utils import *
@@ -74,9 +75,9 @@ class Commands(PermCommandSet):
 	def help(self, source: MCDR.CommandSource):
 		send_message(source, BIG_BLOCK_BEFOR, tr('help_msg', Prefix, tpa=TpaPrefix, tph=TphPrefix), BIG_BLOCK_AFTER, sep='\n')
 
-	@Literal('pos')
+	@Literal('posc')
 	@player_only
-	def tppos(self, source: MCDR.PlayerCommandSource, x: float, y: float, z: float):
+	def tpposc(self, source: MCDR.PlayerCommandSource, x: float, y: float, z: float):
 		server = source.get_server()
 		player = source.player
 		cooldown = self.config.teleport_cooldown
@@ -87,7 +88,24 @@ class Commands(PermCommandSet):
 				send_message(source, MSG_ID, MCDR.RText(tr('ask.cooldown', round(remain)), color=MCDR.RColor.red))
 				return
 			self.__last_teleports[player] = now
-		cmd = self.config.teleport_xyz_command.format(name=player, x=x, y=y, z=z)
+		cmd = "execute as %s at %s run " %(player, player) + self.config.teleport_xyz_command.format(name=player, x=x, y=y, z=z)
+		server.execute(cmd)
+
+	@Literal('posd')
+	@player_only
+	def tpposd(self, source: MCDR.PlayerCommandSource, d: str, x: float, y: float, z: float):
+		server = source.get_server()
+		player = source.player
+		cooldown = self.config.teleport_cooldown
+		if cooldown > 0:
+			now = time.time()
+			remain = self.__last_teleports.get(player, 0) + cooldown - now
+			if remain > 0:
+				send_message(source, MSG_ID, MCDR.RText(tr('ask.cooldown', round(remain)), color=MCDR.RColor.red))
+				return
+			self.__last_teleports[player] = now
+		cmd = self.config.teleport_dim_xyz_command.format(dimension=d, name=player, x=x, y=y, z=z)
+		#cmd = "/execute in %s run tp %s %d %d %d" % (d, player, x, y ,z)
 		server.execute(cmd)
 
 	@Literal('ask')
@@ -237,6 +255,45 @@ class Commands(PermCommandSet):
 			elif not self._has_warp_permission(source, point) and not self.has_force_permission(source):
 				send_message(source, MCDR.RText(tr('warp.points.exists'), color=MCDR.RColor.red))
 				return
+			self.points.set_point(WarpPoint(x=x, y=y, z=z, dimension=dimension, name=name,
+				creator=source.player if isinstance(source, MCDR.PlayerCommandSource) else '',
+				permission=1))
+			send_message(source, MCDR.RText(tr('warp.created', name) if point is None else tr('warp.updated', point.name), color=MCDR.RColor.green), log=True)
+
+		@Literal(['addhere'])
+		def set(self, source: MCDR.CommandSource, name: str):
+			server = get_server_instance()
+			#assert server.is_rcon_running()
+			# if x is None:
+			# 	if not source.is_player:
+			# 		send_message(source, MCDR.RText(server.rtr('kpi.command.player_only'), color=MCDR.RColor.red))
+			# 		return
+			# 	x, y, z = get_player_pos(source.player)
+			point = self.points.get_point(name)
+
+			if point is None:
+				if self.points.points_count >= self.points.max_warp_points:
+					send_message(source, MCDR.RText(tr('warp.points.full'), color=MCDR.RColor.red))
+					return
+				if isinstance(source, MCDR.PlayerCommandSource) and not self.has_force_permission(source):
+					player_points_count = self.points.get_player_point_used(source.player)
+					if player_points_count >= self.points.max_warp_points_per_player:
+						send_message(source, MCDR.RText(tr('warp.points.full_per_player',
+								count=player_points_count, limit=self.points.max_warp_points_per_player),
+							color=MCDR.RColor.red))
+						return
+			elif not self._has_warp_permission(source, point) and not self.has_force_permission(source):
+				send_message(source, MCDR.RText(tr('warp.points.exists'), color=MCDR.RColor.red))
+				return
+
+			player = source.player
+
+			x = float(server.rcon_query('data get entity {} Pos[0]'.format(player)).split(": ")[-1][:-1])
+			y = float(server.rcon_query('data get entity {} Pos[1]'.format(player)).split(": ")[-1][:-1])
+			z = float(server.rcon_query('data get entity {} Pos[2]'.format(player)).split(": ")[-1][:-1])
+
+			dimension = eval(server.rcon_query('data get entity {} Dimension'.format(player)).split(": ")[-1])
+
 			self.points.set_point(WarpPoint(x=x, y=y, z=z, dimension=dimension, name=name,
 				creator=source.player if isinstance(source, MCDR.PlayerCommandSource) else '',
 				permission=1))

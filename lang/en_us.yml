@@ -1,7 +1,8 @@
 tpm:
   help_msg: |-
     {0} help :Show this help message
-    {0} pos <x> <y> <z> :Teleport to target position
+    {0} posc <x> <y> <z> :Teleport to target position in current dimension
+    {0} posd <d> <x> <y> <z> :Teleport to target position in target dimension
     {0} ask <player> :Teleport you to somebody
       aka {tpa}
     {0} askhere <player> :Teleport somebody to you
@@ -12,6 +13,7 @@ tpm:
     {0} warp <point> :Teleport to the warp point
     {0} warps list :List all warp points
     {0} warps add <point> <x> <y> <z> <dimension> :Add or set a warp point
+    {0} warps addhere <point> :Add or set a warp point at your current position
     {0} warps remove <point> :Remove a warp point
   ask:
     sending: 'Your teleport request is sending to {0}...'

@@ -6,14 +6,12 @@
 
 *If it's useful, please give a star :)*
 
-## Feature
-
-- Teleport between players
-- In game warp points
-
-## TODO
-
-- Linking with login_proxy?
+## Modification
+- Change the maxium of points of normal players to 10 
+- Change the maxium of points limit to 1024
+- add command `!!tp warps addhere`
+- modified the command `!!tp pos` to `!!tp posc`
+- add command `!!tp posd` for teleporting to a point in another dimension
 
 ## Dependencies
 
@@ -29,7 +27,8 @@
 |         Command format | Introduction |
 |------------------------|-----|
 | `!!tp help`            | Show help message, aka `!!tp` |
-| `!!tp pos <x> <y> <z>` | Teleport to `<x>`, `<y>`, `<z>` |
+| `!!tp posc <x> <y> <z>` | Teleport to target position in current dimension |
+| `!!tp posd <d> <x> <y> <z>` | Teleport to target position in target dimension |
 | `!!tp ask <name>`      | Send an teleport request, aka `!!tpa` |
 | `!!tp askhere <name>`  | Send an teleport request to here, aka `!!tph` |
 | `!!tp accept`          | Accept the teleport request |
@@ -38,6 +37,7 @@
 | `!!tp warp <point>`    | Teleport to the warp point, aka `!!warp` |
 | `!!tp warps list`      | List all warp points |
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | Add or set a warp point |
+| `!!tp warps addhere <point>` | Add or set a warp point at your current position (required to enable the rcon feather of the server and mcdreforged) |
 | `!!tp warps remove <point>` | Remove a warp point |
 
 ## Config files
@@ -47,7 +47,8 @@
 ```javascript
 {
     "minimum_permission_level": { // Command permissions
-        "pos": 2,
+        "posc": 2,
+        "posd": 2,
         "ask": 1,
         "askhere": 1,
         "accept": 1,

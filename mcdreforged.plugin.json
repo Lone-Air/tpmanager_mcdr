@@ -1,13 +1,13 @@
 {
   "id": "tpm",
-  "version": "0.5.3",
-  "name": "TpManager",
+  "version": "1.0.0",
+  "name": "TpManager-Renewed",
   "description": {
     "en_us": "A Minecraft teleport manager",
     "zh_cn": "一个Minecraft服务器传送管理"
   },
-  "author": "zyxkad",
-  "link": "https://github.com/kmcsr/tpmanager_mcdr",
+  "author": "zyxkad + laman28",
+  "link": "https://github.com/Lone-Air/tpmanager_mcdr",
   "dependencies": {
     "mcdreforged": "^2.3.0",
     "kpi": "^1.5.2"

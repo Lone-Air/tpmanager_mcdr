@@ -1,7 +1,8 @@
 tpm:
   help_msg: |-
     {0} help :显示这条帮助信息
-    {0} pos <x> <y> <z> :传送到指定坐标
+    {0} posc <x> <y> <z> :传送到当前维度下的指定坐标
+    {0} posd <d> <x> <y> <z> :传送到指定维度下的指定坐标
     {0} ask <player> :请求将你传送到他人
       同{tpa}
     {0} askhere <player> :请求他人传送到你
@@ -12,6 +13,7 @@ tpm:
     {0} warp <point> :传送到坐标点
     {0} warps list :列出所有坐标点
     {0} warps add <point> <x> <y> <z> <dimension> :添加或设置坐标点
+    {0} warps addhere <point> :在当前位置添加或设置坐标点
     {0} warps remove <point> :删除坐标点
   ask:
     sending: '您的传送请求已发送给{0}...'

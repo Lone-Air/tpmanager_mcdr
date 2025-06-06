@@ -24,7 +24,8 @@ BIG_BLOCK_AFTER = LazyData(lambda data:
 class TPMConfig(Config, msg_id=MSG_ID):
 	# 0:guest 1:user 2:helper 3:admin 4:owner
 	class minimum_permission_level(JSONObject):
-		pos: int     = 2
+		posc: int     = 2
+		posd: int     = 2
 		ask: int     = 1
 		askhere: int = 1
 		accept: int  = 1
@@ -35,6 +36,7 @@ class TPMConfig(Config, msg_id=MSG_ID):
 		warp_set: int    = 2
 		warp_remove: int = 2
 		warp_config: int = 3
+		warp_list: int = 1
 
 	teleport_cooldown: int = 60 # in seconds
 	teleport_expiration: int = 10 # in seconds
@@ -47,20 +49,20 @@ class TPMConfig(Config, msg_id=MSG_ID):
 	enable_wrap: bool = True
 
 class WarpPoint(JSONObject):
-	x: float
-	y: float
-	z: float
-	dimension: str
-	creator: str
-	name: str
+	x: float = 0.0
+	y: float = 0.0
+	z: float = 0.0
+	dimension: str = "minecraft:overworld"
+	creator: str = "nobody"
+	name: str = "warppoint.name"
 	permission: int = 1
 
 @typing.final
 class WarpPoints(JSONStorage):
 	_instance: ClassVar[Optional[Self]] = None
 
-	max_warp_points: int = 9
-	max_warp_points_per_player: int = 1
+	max_warp_points: int = 1024
+	max_warp_points_per_player: int = 10
 	warp_points: List[WarpPoint] = []
 
 	@classmethod

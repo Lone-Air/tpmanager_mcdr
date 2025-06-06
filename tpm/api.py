@@ -21,7 +21,8 @@ def on_player_joined(server: MCDR.PluginServerInterface, player: str, info: MCDR
 	players.add(player.lower())
 
 def on_player_left(server: MCDR.PluginServerInterface, player: str):
-	players.remove(player.lower())
+	try: players.remove(player.lower())
+	except Exception: pass
 
 def is_online(player: str) -> bool:
 	return player.lower() in players

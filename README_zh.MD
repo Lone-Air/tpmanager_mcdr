@@ -6,14 +6,12 @@
 
 *如果本插件有用, 请给个star吧 :)*
 
-## 特性
-
-- 玩家之间的传送
-- 游戏内路径点传送
-
-## TODO
-
-- 与login_proxy联动?
+## 修改
+- 更改普通玩家最大路径量为10
+- 更改总路径量为1024
+- 添加了指令 `!!tp warps addhere`
+- 修改了指令 `!!tp pos` 为 `!!tp posc`
+- 为传送至其他维度添加了指令 `!!tp posd`
 
 ## 依赖
 
@@ -29,7 +27,8 @@
 |                指令格式 | 介绍 |
 |------------------------|-----|
 | `!!tp help`            | 显示帮助信息, `!!tp`同 |
-| `!!tp pos <x> <y> <z>` | 传送到`<x>`, `<y>`, `<z>` |
+| `!!tp posc <x> <y> <z>` | 传送到当前维度下的指定坐标 |
+| `!!tp posd <d> <x> <y> <z>` | 传送到指定维度下的指定坐标 |
 | `!!tp ask <name>`      | 请求传送到玩家, `!!tpa`同 |
 | `!!tp askhere <name>`  | 请求玩家传送到你, `!!tph`同 |
 | `!!tp accept`          | 同意传送请求 |
@@ -38,6 +37,7 @@
 | `!!tp warp <point>`    | 传送到坐标点, `!!warp`同 |
 | `!!tp warps list`      | 列出所有坐标点 |
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | 添加或设置坐标点 |
+| `!!tp warps addhere <point>` | 在当前位置添加或设置坐标点（需要开启服务端和MCDR的rcon功能） |
 | `!!tp warps remove <point>` | 删除坐标点 |
 
 ## 配置文件
