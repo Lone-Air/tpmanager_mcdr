@@ -50,7 +50,8 @@
 ```javascript
 {
     "minimum_permission_level": { // 指令权限
-        "pos": 2,
+        "posc": 2,
+        "posd": 2,
         "ask": 1,
         "askhere": 1,
         "accept": 1,
