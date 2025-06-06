@@ -6,7 +6,7 @@
     "en_us": "A Minecraft teleport manager",
     "zh_cn": "一个Minecraft服务器传送管理"
   },
-  "author": "zyxkad + laman28",
+  "author": "laman28",
   "link": "https://github.com/Lone-Air/tpmanager_mcdr",
   "dependencies": {
     "mcdreforged": "^2.3.0",
