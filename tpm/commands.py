@@ -261,7 +261,7 @@ class Commands(PermCommandSet):
 			send_message(source, MCDR.RText(tr('warp.created', name) if point is None else tr('warp.updated', point.name), color=MCDR.RColor.green), log=True)
 
 		@Literal(['addhere'])
-		def set(self, source: MCDR.CommandSource, name: str):
+		def sethere(self, source: MCDR.CommandSource, name: str):
 			server = get_server_instance()
 			#assert server.is_rcon_running()
 			# if x is None:
