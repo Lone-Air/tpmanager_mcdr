@@ -13,6 +13,8 @@
 - 修改了指令 `!!tp pos` 为 `!!tp posc`
 - 为传送至其他维度添加了指令 `!!tp posd`
 - 添加了更多 `!!tp warps` 子节点的指令
+- 页面化 `!!tp list`
+- 添加 `!!tp search`
 
 ## 依赖
 
@@ -36,7 +38,8 @@
 | `!!tp reject`          | 拒绝传送请求 |
 | `!!tp cancel`          | 取消传送请求 |
 | `!!tp warp <point>`    | 传送到坐标点, `!!warp`同 |
-| `!!tp warps list`      | 列出所有坐标点 |
+| `!!tp warps list [页]`      | 列出此页中的坐标点 |
+| `!!tp warps search <关键词> [页]` | 列出此页中匹配关键词的坐标点 |
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | 添加或设置坐标点 |
 | `!!tp warps addhere <point>` | 在当前位置添加或设置坐标点（需要开启服务端和MCDR的rcon功能） |
 | `!!tp warps remove <point>` | 删除坐标点 |
@@ -68,6 +71,7 @@
         "warp_remove": 1,
         "warp_config": 3,
         "warp_list": 1,
+        "warp_search": 1,
         "warp_rename": 1,
         "warp_disown": 1,
         "warp_alias": 1,
