@@ -13,6 +13,8 @@
 - modified the command `!!tp pos` to `!!tp posc`
 - add command `!!tp posd` for teleporting to a point in another dimension
 - add more commands to `!!tp warps` sub-node
+- paginated `!!tp list`
+- add `!!tp search`
 ## Dependencies
 
 | ID | Release Link |
@@ -35,7 +37,8 @@
 | `!!tp reject`          | Reject the teleport request |
 | `!!tp cancel`          | Cancel your teleport request |
 | `!!tp warp <point>`    | Teleport to the warp point, aka `!!warp` |
-| `!!tp warps list`      | List all warp points |
+| `!!tp warps list [page]`      | List warp points within the page |
+| `!!tp warps search <keyword> [page]` | List warp points that matches the keyword within the page |
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | Add or set a warp point |
 | `!!tp warps addhere <point>` | Add or set a warp point at your current position (required to enable the rcon feather of the server and mcdreforged) |
 | `!!tp warps remove <point>` | Remove a warp point |
@@ -65,6 +68,7 @@
         "warp_remove": 1,
         "warp_config": 3,
         "warp_list": 1,
+        "warp_search": 1,
         "warp_rename": 1,
         "warp_disown": 1,
         "warp_alias": 1,
