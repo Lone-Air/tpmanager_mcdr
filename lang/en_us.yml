@@ -47,7 +47,6 @@ tpm:
       full_per_player: 'Your personal warp point slot is full ({count}/{limit})'
       exists: 'Warp point {0} is already exists'
       not_exists: 'Warp point {0} is not exists'
-      alias: 'Alias of {o} has been created: {n}'
     teleporting: 'Teleporing to {name}'
     created: 'Warp point {0} created'
     updated: 'Warp point {0} updated'
@@ -56,4 +55,5 @@ tpm:
     permdenied: 'Permission denied'
     disowned: 'Warp point {o} has been disowned'
     notalias: 'Warp point {0} is not an alias'
+    alias: 'Alias of {o} has been created: {n}'
     moderefused: 'You are not allowed to use this command in your current gamemode'
