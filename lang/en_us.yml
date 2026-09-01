@@ -11,7 +11,8 @@ tpm:
     {0} reject :Reject teleport request
     {0} cancel :Cancel your teleport request
     {0} warp <point> :Teleport to the warp point
-    {0} warps list :List all warp points
+    {0} warps list [page] :List warp points within the page
+    {0} warps search <keyword> [page] :List warp points that matches the keyword within the page
     {0} warps add <point> <x> <y> <z> <dimension> :Add or set a warp point
     {0} warps addhere <point> :Add or set a warp point at your current position
     {0} warps remove <point> :Remove a warp point
@@ -57,3 +58,6 @@ tpm:
     notalias: 'Warp point {0} is not an alias'
     alias: 'Alias of {o} has been created: {n}'
     moderefused: 'You are not allowed to use this command in your current gamemode'
+    pages: 'Page {c}/{t}'
+    outofpages: 'You are trying to view page {c}, but there is only {t} available'
+    mustlargerthanzero: 'The number must larger than 0'
