@@ -2,7 +2,7 @@
 - English
 - [中文](README_zh.MD)
 
-# Tp Manager
+# Tp Manager - Renewed
 
 *If it's useful, please give a star :)*
 
