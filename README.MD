@@ -12,7 +12,7 @@
 - add command `!!tp warps addhere`
 - modified the command `!!tp pos` to `!!tp posc`
 - add command `!!tp posd` for teleporting to a point in another dimension
-
+- add more commands to `!!tp warps` sub-node
 ## Dependencies
 
 | ID | Release Link |
@@ -39,6 +39,10 @@
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | Add or set a warp point |
 | `!!tp warps addhere <point>` | Add or set a warp point at your current position (required to enable the rcon feather of the server and mcdreforged) |
 | `!!tp warps remove <point>` | Remove a warp point |
+| `!!tp warps rename <point> <new_point>` | Rename a warp point |
+| `!!tp warps disown <point>` | Disown a warp point |
+| `!!tp warps alias <alias> <original>` | Create an alias of a warp point |
+| `!!tp warps rmalias <alias>` | Remove an alias of a warp point not directly remove the warp point |
 
 ## Config files
 
@@ -52,8 +56,19 @@
         "ask": 1,
         "askhere": 1,
         "accept": 1,
+        "confirm": 1,
         "reject": 0,
-        "cancel": 0
+        "cancel": 0,
+        "warp": 1,
+        "warp_set": 2,
+        "warp_addhere": 2,
+        "warp_remove": 1,
+        "warp_config": 3,
+        "warp_list": 1,
+        "warp_rename": 1,
+        "warp_disown": 1,
+        "warp_alias": 1,
+        "warp_rmalias": 1
     },
     "teleport_cooldown": 60, // in sec, the minimum teleport operation interval
     "teleport_expiration": 10, // in sec, the teleport request expiration
@@ -61,6 +76,7 @@
         "say Teleporting {src} to {dst} ...",
         "tp {src} {dst}",
     ],
-    "teleport_xyz_command": "tp {name} {x} {y} {z}" // Command for teleport position
+    "teleport_xyz_command": "tp {name} {x} {y} {z}" // Command for teleport position,
+    "enable_wrap": true
 }
 ```
