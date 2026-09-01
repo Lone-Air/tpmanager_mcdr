@@ -1,6 +1,7 @@
  
 import time
 from typing import Callable, TypeVar
+import nbtlib as snbt
 
 import mcdreforged.api.all as MCDR
 
@@ -49,6 +50,8 @@ def register(server: MCDR.PluginServerInterface):
 
 Self = TypeVar("Self", bound="Commands")
 
+#global__tpspb_map: dict[str, list[str, float]] = {}
+
 class Commands(PermCommandSet):
 	Prefix = Prefix
 	HelpMessage = 'TP manager help message'
@@ -77,7 +80,7 @@ class Commands(PermCommandSet):
 
 	@Literal('posc')
 	@player_only
-	def tpposc(self, source: MCDR.PlayerCommandSource, x: float, y: float, z: float):
+	def tpposc(self, source: MCDR.PlayerCommandSource, x: str, y: str, z: str):
 		server = source.get_server()
 		player = source.player
 		cooldown = self.config.teleport_cooldown
@@ -88,12 +91,49 @@ class Commands(PermCommandSet):
 				send_message(source, MSG_ID, MCDR.RText(tr('ask.cooldown', round(remain)), color=MCDR.RColor.red))
 				return
 			self.__last_teleports[player] = now
-		cmd = "execute as %s at %s run " %(player, player) + self.config.teleport_xyz_command.format(name=player, x=x, y=y, z=z)
+
+		#if x == "~": x = float(server.rcon_query('data get entity {} Pos[0]'.format(player)).split(": ")[-1][:-1])
+		#if y == "~":  y = float(server.rcon_query('data get entity {} Pos[1]'.format(player)).split(": ")[-1][:-1])
+		#if z == "~": z = float(server.rcon_query('data get entity {} Pos[2]'.format(player)).split(": ")[-1][:-1])
+		try:
+			if(x != '~' and x != '^'):
+				float(x)
+		except ValueError:
+			if(x[0] == '~' or x[0] == '^'):
+				try:
+					float(x[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='x'), color=MCDR.RColor.red))
+					return
+
+		try:
+			if(y != '~' and y != '^'):
+				float(y)
+		except ValueError:
+			if(y[0] == '~' or y[0] == '^'):
+				try:
+					float(y[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='y'), color=MCDR.RColor.red))
+					return
+
+		try:
+			if(z != '~' and z != '^'):
+				float(z)
+		except ValueError:
+			if(z[0] == '~' or z[0] == '^'):
+				try:
+					float(z[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='z'), color=MCDR.RColor.red))
+					return
+
+		cmd = "execute as %s at %s run tp %s %s %s %s" %(player, player, player, x, y, z)
 		server.execute(cmd)
 
 	@Literal('posd')
 	@player_only
-	def tpposd(self, source: MCDR.PlayerCommandSource, d: str, x: float, y: float, z: float):
+	def tpposd(self, source: MCDR.PlayerCommandSource, d: str, x: str, y: str, z: str):
 		server = source.get_server()
 		player = source.player
 		cooldown = self.config.teleport_cooldown
@@ -104,8 +144,47 @@ class Commands(PermCommandSet):
 				send_message(source, MSG_ID, MCDR.RText(tr('ask.cooldown', round(remain)), color=MCDR.RColor.red))
 				return
 			self.__last_teleports[player] = now
-		cmd = self.config.teleport_dim_xyz_command.format(dimension=d, name=player, x=x, y=y, z=z)
-		#cmd = "/execute in %s run tp %s %d %d %d" % (d, player, x, y ,z)
+
+		#if x == "~": x = float(server.rcon_query('data get entity {} Pos[0]'.format(player)).split(": ")[-1][:-1])
+		#if y == "~":  y = float(server.rcon_query('data get entity {} Pos[1]'.format(player)).split(": ")[-1][:-1])
+		#if z == "~": z = float(server.rcon_query('data get entity {} Pos[2]'.format(player)).split(": ")[-1][:-1])
+		
+		#cmd = self.config.teleport_dim_xyz_command.format(dimension=d, name=player, x=x, y=y, z=z)
+
+		try:
+			if(x != '~' and x != '^'):
+				float(x)
+		except ValueError:
+			if(x[0] == '~' or x[0] == '^'):
+				try:
+					float(x[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='x'), color=MCDR.RColor.red))
+					return
+
+		try:
+			if(y != '~' and y != '^'):
+				float(y)
+		except ValueError:
+			if(y[0] == '~' or y[0] == '^'):
+				try:
+					float(y[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='y'), color=MCDR.RColor.red))
+					return
+
+		try:
+			if(z != '~' and z != '^'):
+				float(z)
+		except ValueError:
+			if(z[0] == '~' or z[0] == '^'):
+				try:
+					float(z[1:])
+				except Exception:
+					send_message(source, MSG_ID, MCDR.RText(tr('ask.invalid_position', err='z'), color=MCDR.RColor.red))
+					return
+
+		cmd = "execute in %s run tp %s %d %d %d" % (d, player, x, y ,z)
 		server.execute(cmd)
 
 	@Literal('ask')
@@ -113,8 +192,30 @@ class Commands(PermCommandSet):
 	def ask(self, source: MCDR.PlayerCommandSource, target: str):
 		server = source.get_server()
 		name = source.player
+		query = server.rcon_query(f"data get entity {target} Tags").split("has the following entity data: ")
+		if len(query) > 1:
+			nbtdata = snbt.parse_nbt(query[-1])
+			is_bot = "BOT" in nbtdata.unpack()
+			is_spb = "SPECIAL_BOT" in nbtdata.unpack()
+		else:
+			is_bot = False
+			is_spb = False
+
+		if is_bot or is_spb:
+			server.execute(f"tp {name} {target}")
+			return
+		'''
+		if is_spb:
+			cttime = time.time()
+			global__tpspb_map.update({source, [target, cttime]})
+			#send_message(source, MCDR.RText(tr('ask.spb'), color=MCDR.RColor.yellow))
+			server.tell(name, f"§c{tr('ask.spb')}")
+			return
+'''
 		if not is_online(target):
 			send_message(source, MSG_ID, MCDR.RText(tr('ask.player_not_online', target), color=MCDR.RColor.yellow))
+			return
+
 		if not self.register_accept(source, target,
 			lambda: self.execute_teleport_commands(server, target, name),
 			lambda: send_message(source, MSG_ID, MCDR.RText(tr('ask.aborted'), color=MCDR.RColor.red)),
@@ -151,6 +252,27 @@ class Commands(PermCommandSet):
 			new_command('{} accept'.format(Prefix), '[{}]'.format(tr('word.accept')), color=MCDR.RColor.light_purple),
 			new_command('{} reject'.format(Prefix), '[{}]'.format(tr('word.reject')), color=MCDR.RColor.red),
 		))
+
+	'''
+	@Literal("confirm")
+	@player_only
+	def confirmcmd(source: MCDR.PlayerCommandSource):
+		server = source.get_server()
+		name = source.player
+
+		if name in global__tpspb_map:
+			if global__tpspb_map[name][1] + 60.0 >= time.time():
+				server.execute(f"tp {name} {global__tpspb_map[name][0]}")
+				global__tpspb_map.pop(name)
+				return
+			else:
+				send_message(source, MCDR.RText(tr('ask.timeout'), color=MCDR.RColor.red))
+				global__tpspb_map.pop(name)
+				return
+		else:
+			send_message(source, MCDR.RText(tr('ask.unknownrequest'), color=MCDR.RColor.red))
+			return
+	'''
 
 	@Literal(['accept', 'acc'])
 	@player_only
@@ -189,10 +311,20 @@ class Commands(PermCommandSet):
 		if not self.config.enable_wrap:
 			send_message(source, MCDR.RText(tr('warp.disabled'), color=MCDR.RColor.red))
 			return
+		
 		point = self.points.get_point(name)
+
 		if point is None:
 			send_message(source, MCDR.RText(tr('warp.points.not_exists', name), color=MCDR.RColor.red))
 			return
+
+		while point.isalias:
+			_alias = point.alias
+			point = self.points.get_point(_alias)
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', _alias), color=MCDR.RColor.red))
+				return
+			
 		if not self._has_warp_permission(source, point):
 			send_message(source, MCDR.RText(tr('warp.points.no_permission'), color=MCDR.RColor.red))
 			return
@@ -229,18 +361,26 @@ class Commands(PermCommandSet):
 			points.sort(key=lambda p: p.name.upper())
 			send_message(source, BIG_BLOCK_BEFOR)
 			for p in points:
-				send_message(source, tr('warp.point', x=p.x, y=p.y, z=p.z, dimension=p.dimension, name=p.name))
+				if not p.isalias:
+					send_message(source, tr('warp.point', x=round(p.x, 2), y=round(p.y, 2), z=round(p.z, 2), dimension=p.dimension, name=p.name, c=p.creator))
+				else:
+					send_message(source, tr('warp.pointalias', name=p.name, c=p.creator, to=p.alias))
 			send_message(source, BIG_BLOCK_AFTER)
 
 		@Literal(['set', 'add', 's'])
-		def set(self, source: MCDR.CommandSource, name: str, x: float, y: float, z: float, dimension: str):
-			server = source.get_server()
+		def _set(self, source: MCDR.CommandSource, name: str, x: float, y: float, z: float, dimension: str):
+			z = float(server.rcon_query('data get entity {} Pos[2]'.format(player)).split(": ")[-1][:-1])
+
 			# if x is None:
 			# 	if not source.is_player:
 			# 		send_message(source, MCDR.RText(server.rtr('kpi.command.player_only'), color=MCDR.RColor.red))
 			# 		return
 			# 	x, y, z = get_player_pos(source.player)
 			point = self.points.get_point(name)
+			if len(name) > 32:
+				send_message(source, MCDR.RText(tr('warp.points.overlength'), color=MCDR.RColor.red))
+				return
+			
 			if point is None:
 				if self.points.points_count >= self.points.max_warp_points:
 					send_message(source, MCDR.RText(tr('warp.points.full'), color=MCDR.RColor.red))
@@ -255,12 +395,21 @@ class Commands(PermCommandSet):
 			elif not self._has_warp_permission(source, point) and not self.has_force_permission(source):
 				send_message(source, MCDR.RText(tr('warp.points.exists'), color=MCDR.RColor.red))
 				return
+
+			player = source.player
+			gamemode = int(server.rcon_query('data get entity {} playerGameType'.format(player)).split(": ")[-1])
+
+			if gamemode not in [0, 1, 2]:
+				if source.get_permission_level() < 2:
+					send_message(source, MCDR.RText(tr('warp.moderefused'), color=MCDR.RColor.red))
+					return
+			
 			self.points.set_point(WarpPoint(x=x, y=y, z=z, dimension=dimension, name=name,
 				creator=source.player if isinstance(source, MCDR.PlayerCommandSource) else '',
 				permission=1))
 			send_message(source, MCDR.RText(tr('warp.created', name) if point is None else tr('warp.updated', point.name), color=MCDR.RColor.green), log=True)
 
-		@Literal(['addhere'])
+		@Literal('addhere')
 		def sethere(self, source: MCDR.CommandSource, name: str):
 			server = get_server_instance()
 			#assert server.is_rcon_running()
@@ -270,6 +419,10 @@ class Commands(PermCommandSet):
 			# 		return
 			# 	x, y, z = get_player_pos(source.player)
 			point = self.points.get_point(name)
+
+			if len(name) > 32:
+				send_message(source, MCDR.RText(tr('warp.points.overlength'), color=MCDR.RColor.red))
+				return
 
 			if point is None:
 				if self.points.points_count >= self.points.max_warp_points:
@@ -294,20 +447,125 @@ class Commands(PermCommandSet):
 
 			dimension = eval(server.rcon_query('data get entity {} Dimension'.format(player)).split(": ")[-1])
 
+			gamemode = int(server.rcon_query('data get entity {} playerGameType'.format(player)).split(": ")[-1])
+
+			if gamemode not in [0, 1, 2]:
+				if source.get_permission_level() < 2:
+					send_message(source, MCDR.RText(tr('warp.moderefused'), color=MCDR.RColor.red))
+					return
+
 			self.points.set_point(WarpPoint(x=x, y=y, z=z, dimension=dimension, name=name,
 				creator=source.player if isinstance(source, MCDR.PlayerCommandSource) else '',
 				permission=1))
 			send_message(source, MCDR.RText(tr('warp.created', name) if point is None else tr('warp.updated', point.name), color=MCDR.RColor.green), log=True)
 
-		@Literal(['remove', 'r'])
-		@call_with_root
+		@Literal(['remove', 'r', 'rm'])
 		def remove(self: Self, source: MCDR.CommandSource, name: str):
 			point = self.points.get_point(name)
-			if point is None or not source.has_permission(point.permission):
-				send_message(source, MCDR.RText(tr('warp.points.not_exists'), color=MCDR.RColor.red))
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', name), color=MCDR.RColor.red))
 				return
+
+			while point.isalias:
+				_alias = point.alias
+				point = self.points.get_point(_alias)
+				if point is None: # or not source.has_permission(point.permission):
+					send_message(source, MCDR.RText(tr('warp.points.not_exists', _alias), color=MCDR.RColor.red))
+					return
+					
+			if source.get_permission_level() <= point.permission and source.player != point.creator:
+				send_message(source, MCDR.RText(tr('warp.permdenied'), color=MCDR.RColor.red))
+				return
+					
 			self.points.remove_point(point.name)
 			send_message(source, MCDR.RText(tr('warp.removed', point.name), color=MCDR.RColor.gold), log=True)
+
+		@Literal(['rmalias'])
+		def rmalias(self: Self, source: MCDR.CommandSource, name: str):
+			point = self.points.get_point(name)
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', name), color=MCDR.RColor.red))
+				return
+
+			if not point.isalias:
+				send_message(source, MCDR.RText(tr('warp.points.notalias', point.name), color=MCDR.RColor.red))
+				return
+							
+			if source.get_permission_level() <= point.permission and source.player != point.creator:
+				send_message(source, MCDR.RText(tr('warp.permdenied'), color=MCDR.RColor.red))
+				return
+							
+			self.points.remove_point(point.name)
+			send_message(source, MCDR.RText(tr('warp.removed', point.name), color=MCDR.RColor.gold), log=True)
+		
+		@Literal(['rename', 're'])
+		def rename(self: Self, source: MCDR.CommandSource, name: str, nname: str):
+			point = self.points.get_point(name)
+
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', name), color=MCDR.RColor.red))
+				return
+
+			if source.get_permission_level() <= point.permission and source.player != point.creator:
+				send_message(source, MCDR.RText(tr('warp.points.permdenied'), color=MCDR.RColor.red))
+				return
+
+			if len(nname) > 32:
+				send_message(source, MCDR.RText(tr('warp.points.overlength'), color=MCDR.RColor.red))
+				return
+			
+			self.points.remove_point(point.name)
+			self.points.set_point(WarpPoint(x=point.x, y=point.y, z=point.z, dimension=point.dimension, name=nname,
+				creator=point.creator if isinstance(source, MCDR.PlayerCommandSource) else '',
+				permission=1, isalias=point.isalias, alias=point.alias))
+			send_message(source, MCDR.RText(tr('warp.renamed', o=name, n=nname), color=MCDR.RColor.gold), log=True)
+
+		@Literal('disown')
+		def disown(self: Self, source: MCDR.CommandSource, name: str):
+			point = self.points.get_point(name)
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', name), color=MCDR.RColor.red))
+				return
+
+			while point.isalias:
+				_alias = point.alias
+				point = self.points.get_point(_alias)
+				if point is None: # or not source.has_permission(point.permission):
+					send_message(source, MCDR.RText(tr('warp.points.not_exists', _alias), color=MCDR.RColor.red))
+					return
+			
+			if source.get_permission_level() <= point.permission and source.player != point.creator:
+				send_message(source, MCDR.RText(tr('warp.points.permdenied'), color=MCDR.RColor.red))
+				return
+						
+			self.points.remove_point(point.name)
+			self.points.set_point(WarpPoint(x=point.x, y=point.y, z=point.z, dimension=point.dimension, name=point.name,
+				creator="**disowned" if isinstance(source, MCDR.PlayerCommandSource) else '',
+				permission=2, isalias=point.isalias, alias=point.alias))
+			send_message(source, MCDR.RText(tr('warp.disowned', o=name), color=MCDR.RColor.gold), log=True)
+
+		@Literal(['alias'])
+		def alias(self: Self, source: MCDR.CommandSource, name: str, nname: str):
+			point = self.points.get_point(nname)
+			if point is None: # or not source.has_permission(point.permission):
+				send_message(source, MCDR.RText(tr('warp.points.not_exists', nname), color=MCDR.RColor.red))
+				return
+
+			while point.isalias:
+				_alias = point.alias
+				point = self.points.get_point(_alias)
+				if point is None: # or not source.has_permission(point.permission):
+					send_message(source, MCDR.RText(tr('warp.points.not_exists', _alias), color=MCDR.RColor.red))
+					return
+		
+			if len(nname) > 32:
+				send_message(source, MCDR.RText(tr('warp.points.overlength'), color=MCDR.RColor.red))
+				return
+					
+			self.points.set_point(WarpPoint(x=-1.0, y=-1.0, z=-1.0, dimension='alias', name=name,
+				creator=source.player if isinstance(source, MCDR.PlayerCommandSource) else '',
+				permission=1, isalias=True, alias=nname)) # 1
+			send_message(source, MCDR.RText(tr('warp.alias', n=name, o=nname), color=MCDR.RColor.gold), log=True)
 
 	def register_accept(self, source: MCDR.PlayerCommandSource, target: str,
 		accept_call, reject_call=None,
