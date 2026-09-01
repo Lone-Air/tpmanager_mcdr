@@ -47,7 +47,6 @@ tpm:
       full_per_player: '您的个人传送点已满 ({count}/{limit})'
       exists: '传送点 {0} 已存在'
       not_exists: '传送点 {0} 不存在'
-      alias: '传送点 {o} 的别名已创建: {n}'
     teleporting: '正在传送到 {name}'
     created: '传送点 {0} 已创建'
     updated: '传送点 {0} 已更新'
@@ -56,4 +55,5 @@ tpm:
     permdenied: '权限不足'
     disowned: '传送点 {o} 已被无所有权化'
     notalias: '传送点 {0} 不是别名'
+    alias: '传送点 {o} 的别名已创建: {n}'
     moderefused: '你不能在当前游戏模式使用该指令'
