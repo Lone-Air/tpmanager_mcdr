@@ -2,7 +2,7 @@
 - [English](README.MD)
 - 中文
 
-# Tp Manager
+# Tp Manager - Renewed
 
 *如果本插件有用, 请给个star吧 :)*
 
@@ -12,6 +12,7 @@
 - 添加了指令 `!!tp warps addhere`
 - 修改了指令 `!!tp pos` 为 `!!tp posc`
 - 为传送至其他维度添加了指令 `!!tp posd`
+- 添加了更多 `!!tp warps` 子节点的指令
 
 ## 依赖
 
@@ -39,6 +40,10 @@
 | `!!tp warps add <point> <x> <y> <z> <dimension>` | 添加或设置坐标点 |
 | `!!tp warps addhere <point>` | 在当前位置添加或设置坐标点（需要开启服务端和MCDR的rcon功能） |
 | `!!tp warps remove <point>` | 删除坐标点 |
+| `!!tp warps rename <point> <new_point>` | 重命名一个坐标点 |
+| `!!tp warps disown <point>` | 无所有权化一个坐标点 |
+| `!!tp warps alias <alias> <original>` | 创建一个坐标点的别名 |
+| `!!tp warps rmalias <alias>` | 删除一个坐标点的别名，而不是直接删除该坐标点 |
 
 ## 配置文件
 
@@ -56,7 +61,17 @@
         "askhere": 1,
         "accept": 1,
         "reject": 0,
-        "cancel": 0
+        "cancel": 0,
+        "warp": 1,
+        "warp_set": 2,
+        "warp_addhere": 2,
+        "warp_remove": 1,
+        "warp_config": 3,
+        "warp_list": 1,
+        "warp_rename": 1,
+        "warp_disown": 1,
+        "warp_alias": 1,
+        "warp_rmalias": 1
     },
     "teleport_cooldown": 60, // 秒, 传送冷却
     "teleport_expiration": 10, // 秒, 传送请求过期时间
@@ -64,6 +79,7 @@
         "say Teleporting {src} to {dst} ...",
         "tp {src} {dst}",
     ],
-    "teleport_xyz_command": "tp {name} {x} {y} {z}" // 用于传送到坐标的指令
+    "teleport_xyz_command": "tp {name} {x} {y} {z}" // 用于传送到坐标的指令,
+    "enable_wrap": true
 }
 ```
