@@ -11,8 +11,8 @@ tpm:
     {0} reject :拒绝传送请求
     {0} cancel :取消传送请求
     {0} warp <坐标点> :传送到坐标点
-    {0} warps list [页] :列出此页种的坐标点
-    {0} warps search <关键词> [页] :列出此页种匹配关键词的坐标点
+    {0} warps list [页] :列出此页中的坐标点
+    {0} warps search <关键词> [页] :列出此页中匹配关键词的坐标点
     {0} warps add <坐标点> <x> <y> <z> <维度> :添加或设置坐标点
     {0} warps addhere <坐标点> :在当前位置添加或设置坐标点
     {0} warps remove <坐标点> :删除坐标点
