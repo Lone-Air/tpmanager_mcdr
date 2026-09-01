@@ -3,22 +3,23 @@ tpm:
     {0} help :显示这条帮助信息
     {0} posc <x> <y> <z> :传送到当前维度下的指定坐标
     {0} posd <d> <x> <y> <z> :传送到指定维度下的指定坐标
-    {0} ask <player> :请求将你传送到他人 (传送至bot位置将立即传送)
+    {0} ask <玩家> :请求将你传送到他人 (传送至bot位置将立即传送)
       同{tpa}
-    {0} askhere <player> :请求他人传送到你
+    {0} askhere <玩家> :请求他人传送到你
       同{tph}
     {0} accept :同意传送请求
     {0} reject :拒绝传送请求
     {0} cancel :取消传送请求
-    {0} warp <point> :传送到坐标点
-    {0} warps list :列出所有坐标点
-    {0} warps add <point> <x> <y> <z> <dimension> :添加或设置坐标点
-    {0} warps addhere <point> :在当前位置添加或设置坐标点
-    {0} warps remove <point> :删除坐标点
-    {0} warps rename <point> <new_point> :重命名一个坐标点
-    {0} warps disown <point> :无所有权化一个坐标点
-    {0} warps alias <alias> <original> :创建一个坐标点的别名
-    {0} warps rmalias <alias> :删除一个坐标点的别名，而不是直接删除该坐标点
+    {0} warp <坐标点> :传送到坐标点
+    {0} warps list [页] :列出此页种的坐标点
+    {0} warps search <关键词> [页] :列出此页种匹配关键词的坐标点
+    {0} warps add <坐标点> <x> <y> <z> <维度> :添加或设置坐标点
+    {0} warps addhere <坐标点> :在当前位置添加或设置坐标点
+    {0} warps remove <坐标点> :删除坐标点
+    {0} warps rename <坐标点> <新名称> :重命名一个坐标点
+    {0} warps disown <坐标点> :无所有权化一个坐标点
+    {0} warps alias <别名> <原坐标点> :创建一个坐标点的别名
+    {0} warps rmalias <别名> :删除一个坐标点的别名，而不是直接删除该坐标点
   ask:
     spb: '传送至特殊bot可能会造成意外的死亡事件等，请使用`!!tp confirm`以确认传送'
     unknownrequest: '未知传送请求'
@@ -57,3 +58,6 @@ tpm:
     notalias: '传送点 {0} 不是别名'
     alias: '传送点 {o} 的别名已创建: {n}'
     moderefused: '你不能在当前游戏模式使用该指令'
+    pages: '页 {c}/{t}'
+    outofpages: '你正在尝试浏览第 {c} 页, 但只有 {t} 页可用'
+    mustlargerthanzero: '该数字必须比0大'
