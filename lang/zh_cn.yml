@@ -3,7 +3,7 @@ tpm:
     {0} help :显示这条帮助信息
     {0} posc <x> <y> <z> :传送到当前维度下的指定坐标
     {0} posd <d> <x> <y> <z> :传送到指定维度下的指定坐标
-    {0} ask <player> :请求将你传送到他人
+    {0} ask <player> :请求将你传送到他人 (传送至bot位置将立即传送)
       同{tpa}
     {0} askhere <player> :请求他人传送到你
       同{tph}
@@ -15,7 +15,13 @@ tpm:
     {0} warps add <point> <x> <y> <z> <dimension> :添加或设置坐标点
     {0} warps addhere <point> :在当前位置添加或设置坐标点
     {0} warps remove <point> :删除坐标点
+    {0} warps rename <point> <new_point> :重命名一个坐标点
+    {0} warps disown <point> :无所有权化一个坐标点
+    {0} warps alias <alias> <original> :创建一个坐标点的别名
+    {0} warps rmalias <alias> :删除一个坐标点的别名，而不是直接删除该坐标点
   ask:
+    spb: '传送至特殊bot可能会造成意外的死亡事件等，请使用`!!tp confirm`以确认传送'
+    unknownrequest: '未知传送请求'
     sending: '您的传送请求已发送给{0}...'
     aborted: '您的传送请求已终止'
     timeout: '您的传送请求已超时'
@@ -25,6 +31,7 @@ tpm:
     req_exists: '你已经有传送请求了'
     cooldown: '传送冷却中, 剩余{0}秒'
     player_not_online: '[WARN] 玩家 {0} 不在线'
+    invalid_position: '坐标中存在无效字符 ({err})'
   word:
     accept: 同意
     reject: 拒绝
@@ -32,13 +39,21 @@ tpm:
     no_action: 当前没有任何进行中的操作
   warp:
     disabled: '传送点系统未启用'
-    point: '{name} - [X: {x}, Y: {y}, Z: {z}, D: {dimension}]'
+    point: '§6{c}§4:§2{name} §9- §e{x} {y} {z} §9- §c{dimension}'
+    pointalias: '§6{c}§4:§2{name} §9- §e{to} §9- §cAlias'
     points:
       full: '传送点已满'
+      overlength: '超出最大名称长度: 32'
       full_per_player: '您的个人传送点已满 ({count}/{limit})'
       exists: '传送点 {0} 已存在'
       not_exists: '传送点 {0} 不存在'
+      alias: '传送点 {o} 的别名已创建: {n}'
     teleporting: '正在传送到 {name}'
     created: '传送点 {0} 已创建'
     updated: '传送点 {0} 已更新'
     removed: '传送点 {0} 已删除'
+    renamed: '传送点 {o} 已被重命名为 {n}'
+    permdenied: '权限不足'
+    disowned: '传送点 {o} 已被无所有权化'
+    notalias: '传送点 {0} 不是别名'
+    moderefused: '你不能在当前游戏模式使用该指令'
