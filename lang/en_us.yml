@@ -3,7 +3,7 @@ tpm:
     {0} help :Show this help message
     {0} posc <x> <y> <z> :Teleport to target position in current dimension
     {0} posd <d> <x> <y> <z> :Teleport to target position in target dimension
-    {0} ask <player> :Teleport you to somebody
+    {0} ask <player> :Teleport you to somebody (Teleporting to a bot's location will teleport immediately)
       aka {tpa}
     {0} askhere <player> :Teleport somebody to you
       aka {tph}
@@ -15,7 +15,13 @@ tpm:
     {0} warps add <point> <x> <y> <z> <dimension> :Add or set a warp point
     {0} warps addhere <point> :Add or set a warp point at your current position
     {0} warps remove <point> :Remove a warp point
+    {0} warps rename <point> <new_name> :Rename a warp point
+    {0} warps disown <point> :Disown a warp point
+    {0} warps alias <alias> <original> :Create an alias of a warp point
+    {0} warps rmalias <alias> :Remove an alias of a warp point not directly remove the warp point
   ask:
+    spb: 'Teleport to special bots might cause unexpected death etc. Use `!!tp confirm` to confirm'
+    unknownrequest: 'Unknown teleport request'
     sending: 'Your teleport request is sending to {0}...'
     aborted: 'Your teleport request was aborted'
     timeout: 'Your teleport request was timeouted'
@@ -25,6 +31,7 @@ tpm:
     req_exists: 'You already have a teleport request in progess'
     cooldown: 'Teleporter in cooldown, {0} seconds remaining'
     player_not_online: '[WARN] Player {0} is not online'
+    invalid_position: 'Invalid characters in the position ({err})'
   word:
     accept: ACC
     reject: REJ
@@ -32,13 +39,21 @@ tpm:
     no_action: There are no any action in progess
   warp:
     disabled: 'Warp system is not enabled'
-    point: '{name} - [X: {x}, Y: {y}, Z: {z}, D: {dimension}]'
+    point: '§6{c}§4:§2{name} §9- §e{x} {y} {z} §9- §c{dimension}'
+    pointalias: '§6{c}§4:§2{name} §9- §e{to} §9- §cAlias'
     points:
       full: 'Warp point slot is full'
+      overlength: 'The max length of name: 32'
       full_per_player: 'Your personal warp point slot is full ({count}/{limit})'
       exists: 'Warp point {0} is already exists'
       not_exists: 'Warp point {0} is not exists'
+      alias: 'Alias of {o} has been created: {n}'
     teleporting: 'Teleporing to {name}'
     created: 'Warp point {0} created'
     updated: 'Warp point {0} updated'
     removed: 'Removed warp point {0}'
+    renamed: 'Warp point {o} has been renamed as {n}'
+    permdenied: 'Permission denied'
+    disowned: 'Warp point {o} has been disowned'
+    notalias: 'Warp point {0} is not an alias'
+    moderefused: 'You are not allowed to use this command in your current gamemode'
