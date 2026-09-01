@@ -39,6 +39,7 @@ class TPMConfig(Config, msg_id=MSG_ID):
 		warp_remove: int = 1
 		warp_config: int = 3
 		warp_list: int = 1
+		warp_search: int = 1
 		warp_rename: int = 1
 		warp_disown: int = 1
 		warp_alias: int = 1
