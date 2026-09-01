@@ -2,6 +2,7 @@
 import time
 from typing import Callable, TypeVar
 import nbtlib as snbt
+import math
 
 import mcdreforged.api.all as MCDR
 
@@ -17,6 +18,8 @@ AlternativePrefix = '!!tpm'
 TpaPrefix = '!!tpa'
 TphPrefix = '!!tph'
 WarpPrefix = '!!warp'
+
+page_size = 16 # default
 
 def register(server: MCDR.PluginServerInterface):
 	cfg = get_config()
@@ -356,11 +359,78 @@ class Commands(PermCommandSet):
 
 		@Literal(['list', 'l'])
 		@call_with_root
-		def list(self: Self, source: MCDR.CommandSource):
+		def list(self: Self, source: MCDR.CommandSource, page: int = 1):
+			global page_size
+
+			if page <= 0:
+				send_message(source, MCDR.RText(tr('warp.mustlargerthanzero'), color = MCDR.RColor.red))
+				return
+
 			points = [p for p in self.points.warp_points if self._has_warp_permission(source, p)]
 			points.sort(key=lambda p: p.name.upper())
+
+			counter = 0
+
+			start_position = (page - 1) * page_size
+			end_position = page * page_size
+
+			total = math.ceil(len(points) / page_size)
+
+			if(start_position > len(points)):
+				send_message(source, MCDR.RText(tr('warp.outofpages', c = page, t = total), color = MCDR.RColor.red))
+				return 
+
 			send_message(source, BIG_BLOCK_BEFOR)
+			send_message(source, MCDR.RText(tr('warp.pages', c = page, t = total), color = MCDR.RColor.dark_green))
 			for p in points:
+				if counter < start_position:
+					counter += 1
+					continue
+				if counter >= end_position:
+					break
+				counter += 1
+				if not p.isalias:
+					send_message(source, tr('warp.point', x=round(p.x, 2), y=round(p.y, 2), z=round(p.z, 2), dimension=p.dimension, name=p.name, c=p.creator))
+				else:
+					send_message(source, tr('warp.pointalias', name=p.name, c=p.creator, to=p.alias))
+			send_message(source, BIG_BLOCK_AFTER)
+
+		@Literal(["search", "se"])
+		def search(self: Self, source: MCDR.CommandSource, pattern: str, page: int = 1):
+			global page_size
+
+			if page <= 0:
+				send_message(source, MCDR.RText(tr('warp.mustlargerthanzero'), color = MCDR.RColor.red))
+				return
+
+			points = [p for p in self.points.warp_points if self._has_warp_permission(source, p)]
+			points.sort(key=lambda p: p.name.upper())
+
+			objects: list[WarpPoint] = []
+			for p in points:
+				if pattern not in p.name: continue
+				objects.append(p)
+
+			counter = 0
+			
+			start_position = (page - 1) * page_size
+			end_position = page * page_size
+			
+			total = math.ceil(len(objects) / page_size)
+			
+			if(start_position > len(objects)):
+				send_message(source, MCDR.RText(tr('warp.outofpages', c = page, t = total), color = MCDR.RColor.red))
+				return
+
+			send_message(source, BIG_BLOCK_BEFOR)
+			send_message(source, MCDR.RText(tr('warp.pages', c = page, t = total), color = MCDR.RColor.dark_green))
+			for p in objects:
+				if counter < start_position:
+					counter += 1
+					continue
+				if counter >= end_position:
+					break
+				counter += 1
 				if not p.isalias:
 					send_message(source, tr('warp.point', x=round(p.x, 2), y=round(p.y, 2), z=round(p.z, 2), dimension=p.dimension, name=p.name, c=p.creator))
 				else:
