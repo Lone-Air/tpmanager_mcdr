@@ -29,14 +29,20 @@ class TPMConfig(Config, msg_id=MSG_ID):
 		ask: int     = 1
 		askhere: int = 1
 		accept: int  = 1
+		confirm: int = 1
 		reject: int  = 0
 		cancel: int  = 0
 		warp: int    = 1
 
 		warp_set: int    = 2
-		warp_remove: int = 2
+		warp_addhere: int    = 2
+		warp_remove: int = 1
 		warp_config: int = 3
 		warp_list: int = 1
+		warp_rename: int = 1
+		warp_disown: int = 1
+		warp_alias: int = 1
+		warp_rmalias: int = 1
 
 	teleport_cooldown: int = 60 # in seconds
 	teleport_expiration: int = 10 # in seconds
@@ -56,13 +62,15 @@ class WarpPoint(JSONObject):
 	creator: str = "nobody"
 	name: str = "warppoint.name"
 	permission: int = 1
+	alias: str = ''
+	isalias: bool = False
 
 @typing.final
 class WarpPoints(JSONStorage):
 	_instance: ClassVar[Optional[Self]] = None
 
-	max_warp_points: int = 1024
-	max_warp_points_per_player: int = 10
+	max_warp_points: int = 8192
+	max_warp_points_per_player: int = 8
 	warp_points: List[WarpPoint] = []
 
 	@classmethod
