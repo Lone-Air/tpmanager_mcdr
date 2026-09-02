@@ -15,6 +15,9 @@
 - 添加了更多 `!!tp warps` 子节点的指令
 - 页面化 `!!tp list`
 - 添加 `!!tp search`
+- 添加分类管理功能，包括创建、删除、列表、搜索、重命名、修改前缀以及在分类之间移动坐标点
+- 添加手动分类标签；一个坐标点可以同时手动标记到多个分类，标签持久化保存于 `categories.json`
+- 添加 `!!tp categories rmtag <坐标点>` 用于移除坐标点的所有手动分类标记
 
 ## 依赖
 
@@ -47,8 +50,43 @@
 | `!!tp warps disown <point>` | 无所有权化一个坐标点 |
 | `!!tp warps alias <alias> <original>` | 创建一个坐标点的别名 |
 | `!!tp warps rmalias <alias>` | 删除一个坐标点的别名，而不是直接删除该坐标点 |
+| `!!tp categories add <名称> <前缀>` | 创建分类 |
+| `!!tp categories remove <名称>` | 删除分类, `!!tp categories rm`同 |
+| `!!tp categories list <分类> [页]` | 列出分类中的坐标点, `!!tp categories l`同 |
+| `!!tp categories listc [页]` | 列出所有分类, `!!tp categories lc`同 |
+| `!!tp categories searchc <关键词> [页]` | 搜索分类, `!!tp categories sc`同 |
+| `!!tp categories search <分类> <名称> [页]` | 搜索分类中的坐标点, `!!tp categories se`同 |
+| `!!tp categories padd <分类> <名称> <x> <y> <z> <维度>` | 在分类中添加 / 设置坐标点 |
+| `!!tp categories paddhere <分类> <名称>` | 在当前位置添加分类坐标点 |
+| `!!tp categories rename <旧名称> <新名称>` | 重命名分类, `!!tp categories re`同 |
+| `!!tp categories redef <分类> <新前缀>` | 修改分类前缀 |
+| `!!tp categories premove <分类> <坐标点>` | 删除分类中的坐标点, `!!tp categories prm`同 |
+| `!!tp categories pmove <分类> <坐标点> <目标分类>` | 移动坐标点到另一个分类, `!!tp categories pmv`同 |
+| `!!tp categories tag <坐标点> <分类>` | 手动将坐标点标记到指定分类（可多个） |
+| `!!tp categories rmtag <坐标点>` | 移除坐标点的所有手动分类标记 |
 
 ## 配置文件
+
+#### tpm/categories.json
+
+分类配置和手动分类标记保存在此文件中。`tags` 对象记录每个坐标点手动标记的分类列表，因此一个坐标点可以同时属于多个手动标记的分类。
+
+```json
+{
+    "categories": [
+        {
+            "name": "main",
+            "prefix": "main"
+        }
+    ],
+    "tags": {
+        "spawn": ["main", "public"],
+        "home": ["survival"]
+    }
+}
+```
+
+手动分类标记在判断分类归属时优先于根据坐标点名称前缀进行的自动分类。删除分类时，该分类对应的手动标记也会一并删除。
 
 #### tpm/config.json
 
@@ -75,7 +113,22 @@
         "warp_rename": 1,
         "warp_disown": 1,
         "warp_alias": 1,
-        "warp_rmalias": 1
+        "warp_rmalias": 1,
+        "category_add": 1,
+        "category_remove": 1,
+        "category_list": 1,
+        "category_listc": 1,
+        "category_search": 1,
+        "category_searchc": 1,
+        "category_padd": 2,
+        "category_paddhere": 2,
+        "category_rename": 1,
+        "category_redef": 1,
+        "category_premove": 1,
+        "category_pmove": 1,
+        "category_tag": 1,
+        "category_rmtag": 1,
+        "category_config": 3
     },
     "teleport_cooldown": 60, // 秒, 传送冷却
     "teleport_expiration": 10, // 秒, 传送请求过期时间

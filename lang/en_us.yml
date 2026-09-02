@@ -1,25 +1,40 @@
 tpm:
   help_msg: |-
-    {0} help :Show this help message
-    {0} posc <x> <y> <z> :Teleport to target position in current dimension
-    {0} posd <d> <x> <y> <z> :Teleport to target position in target dimension
-    {0} ask <player> :Teleport you to somebody (Teleporting to a bot's location will teleport immediately)
-      aka {tpa}
-    {0} askhere <player> :Teleport somebody to you
-      aka {tph}
-    {0} accept :Accept teleport request
-    {0} reject :Reject teleport request
-    {0} cancel :Cancel your teleport request
-    {0} warp <point> :Teleport to the warp point
-    {0} warps list [page] :List warp points within the page
-    {0} warps search <keyword> [page] :List warp points that matches the keyword within the page
-    {0} warps add <point> <x> <y> <z> <dimension> :Add or set a warp point
-    {0} warps addhere <point> :Add or set a warp point at your current position
-    {0} warps remove <point> :Remove a warp point
-    {0} warps rename <point> <new_name> :Rename a warp point
-    {0} warps disown <point> :Disown a warp point
-    {0} warps alias <alias> <original> :Create an alias of a warp point
-    {0} warps rmalias <alias> :Remove an alias of a warp point not directly remove the warp point
+    §6§l━━━ §eTP Manager §6§l━━━
+    §7Commands:
+    §bTeleport§r
+      §f{0} posc <x> <y> <z> §8- §7Teleport to a position in the current dimension
+      §f{0} posd <dimension> <x> <y> <z> §8- §7Teleport to a position in another dimension
+      §f{0} ask <player> §8- §7Request teleport to another player §8(§f{tpa}§8)
+      §f{0} askhere <player> §8- §7Request another player to teleport to you §8(§f{tph}§8)
+      §f{0} accept §8/ §f{0} reject §8/ §f{0} cancel §8- §7Accept / reject / cancel a teleport request
+    §bWarp Points§r
+      §f{0} warp <point> §8- §7Teleport to a warp point
+      §f{0} warps list [page] §8- §7List warp points §8(§fl§8)
+      §f{0} warps search <keyword> [page] §8- §7Search warp points §8(§fse§8)
+      §f{0} warps add <point> <x> <y> <z> <dimension> §8- §7Add / set a warp point
+      §f{0} warps addhere <point> §8- §7Add / set a warp point at your current position
+      §f{0} warps remove <point> §8- §7Remove a warp point
+      §f{0} warps rename <point> <new_name> §8- §7Rename a warp point
+      §f{0} warps disown <point> §8- §7Disown a warp point
+      §f{0} warps alias <alias> <original> §8- §7Create an alias for a warp point
+      §f{0} warps rmalias <alias> §8- §7Remove a warp point alias
+    §bCategories§r
+      §f{0} categories add <name> <prefix> §8- §7Create a category
+      §f{0} categories remove <name> §8- §7Remove a category §8(§frm§8)
+      §f{0} categories list <category> [page] §8- §7List warp points in a category §8(§fl§8)
+      §f{0} categories listc [page] §8- §7List all categories §8(§flc§8)
+      §f{0} categories searchc <keyword> [page] §8- §7Search categories §8(§fsc§8)
+      §f{0} categories search <category> <name> [page] §8- §7Search warp points in a category §8(§fse§8)
+      §f{0} categories padd <category> <name> <x> <y> <z> <dimension> §8- §7Add / set a warp point in a category
+      §f{0} categories paddhere <category> <name> §8- §7Add a warp point here in a category
+      §f{0} categories rename <old> <new> §8- §7Rename a category
+      §f{0} categories redef <category> <new_prefix> §8- §7Change a category prefix
+      §f{0} categories premove <category> <point> §8- §7Remove a warp point from a category §8(§fprm§8)
+      §f{0} categories pmove <category> <point> <target_category> §8- §7Move a warp point to another category §8(§fpmv§8)
+      §f{0} categories tag <warp_point> <category> §8- §7Manually tag a warp point into a category (multiple allowed)
+      §f{0} categories rmtag <warp_point> §8- §7Remove all manual category tags from a warp point
+    §8Tip: §7[page] is optional; §f<argument> §7is required.
   ask:
     spb: 'Teleport to special bots might cause unexpected death etc. Use `!!tp confirm` to confirm'
     unknownrequest: 'Unknown teleport request'
@@ -54,6 +69,11 @@ tpm:
     removed: 'Removed warp point {0}'
     renamed: 'Warp point {o} has been renamed as {n}'
     permdenied: 'Permission denied'
+    point_not_exists: 'Warp point {point} does not exist in category {category}'
+    point_removed: 'Removed warp point {point} from category {category}'
+    point_moved: 'Warp point {o} has been moved to {n} in category {category}'
+    point_tagged: 'Warp point {point} has been tagged into category {category}'
+    point_already_tagged: 'Warp point {point} is already tagged into category {category}'
     disowned: 'Warp point {o} has been disowned'
     notalias: 'Warp point {0} is not an alias'
     alias: 'Alias of {o} has been created: {n}'
@@ -61,3 +81,28 @@ tpm:
     pages: 'Page {c}/{t}'
     outofpages: 'You are trying to view page {c}, but there is only {t} available'
     mustlargerthanzero: 'The number must larger than 0'
+  category:
+    pages: 'Page {c}/{t}'
+    item: '§6{creator}§r: §e{name} §9- prefix: §b{prefix}'
+    builtin: 'built-in'
+    created: 'Category {name} created with prefix {prefix}:'
+    removed: 'Category {name} removed'
+    renamed: 'Category {o} has been renamed as {n}'
+    redefined: 'Category {name} prefix has been changed to {prefix}:'
+    exists: 'Category {0} already exists'
+    not_exists: 'Category {0} does not exist'
+    prefix_exists: 'Category prefix {0} is already in use'
+    full: 'Category slot is full ({0})'
+    full_per_player: 'Your personal category slot is full ({count}/{limit})'
+    overlength: 'The max length of category name is 32 and prefix is 31'
+    invalid_name: 'Invalid category name'
+    invalid_prefix: 'Invalid category prefix: it must be non-empty and cannot contain ":"'
+    reserved_name: 'The category name other is reserved for unclassified warp points'
+    permdenied: 'Permission denied'
+    point_not_exists: 'Warp point {point} does not exist in category {category}'
+    point_removed: 'Removed warp point {point} from category {category}'
+    point_moved: 'Warp point {o} has been moved to {n} in category {category}'
+    point_tagged: 'Warp point {point} has been tagged into category {category}'
+    point_already_tagged: 'Warp point {point} is already tagged into category {category}'
+    point_tags_removed: 'All manual category tags have been removed from warp point {point}'
+    point_not_tagged: 'Warp point {point} has no manual category tags'

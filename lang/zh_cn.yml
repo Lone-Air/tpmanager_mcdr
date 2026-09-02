@@ -1,25 +1,40 @@
 tpm:
   help_msg: |-
-    {0} help :显示这条帮助信息
-    {0} posc <x> <y> <z> :传送到当前维度下的指定坐标
-    {0} posd <d> <x> <y> <z> :传送到指定维度下的指定坐标
-    {0} ask <玩家> :请求将你传送到他人 (传送至bot位置将立即传送)
-      同{tpa}
-    {0} askhere <玩家> :请求他人传送到你
-      同{tph}
-    {0} accept :同意传送请求
-    {0} reject :拒绝传送请求
-    {0} cancel :取消传送请求
-    {0} warp <坐标点> :传送到坐标点
-    {0} warps list [页] :列出此页中的坐标点
-    {0} warps search <关键词> [页] :列出此页中匹配关键词的坐标点
-    {0} warps add <坐标点> <x> <y> <z> <维度> :添加或设置坐标点
-    {0} warps addhere <坐标点> :在当前位置添加或设置坐标点
-    {0} warps remove <坐标点> :删除坐标点
-    {0} warps rename <坐标点> <新名称> :重命名一个坐标点
-    {0} warps disown <坐标点> :无所有权化一个坐标点
-    {0} warps alias <别名> <原坐标点> :创建一个坐标点的别名
-    {0} warps rmalias <别名> :删除一个坐标点的别名，而不是直接删除该坐标点
+    §6§l━━━ §eTP Manager §6§l━━━
+    §7常用指令：
+    §b传送§r
+      §f{0} posc <x> <y> <z> §8- §7传送到当前维度的指定坐标
+      §f{0} posd <维度> <x> <y> <z> §8- §7传送到指定维度的坐标
+      §f{0} ask <玩家> §8- §7请求传送到其他玩家 §8(§f{tpa}§8)
+      §f{0} askhere <玩家> §8- §7请求其他玩家传送到你 §8(§f{tph}§8)
+      §f{0} accept §8/ §f{0} reject §8/ §f{0} cancel §8- §7处理 / 拒绝 / 取消传送请求
+    §b传送点§r
+      §f{0} warp <坐标点> §8- §7传送到指定坐标点
+      §f{0} warps list [页] §8- §7列出坐标点 §8(§fl§8)
+      §f{0} warps search <关键词> [页] §8- §7搜索坐标点 §8(§fse§8)
+      §f{0} warps add <坐标点> <x> <y> <z> <维度> §8- §7添加 / 设置坐标点
+      §f{0} warps addhere <坐标点> §8- §7在当前位置添加 / 设置坐标点
+      §f{0} warps remove <坐标点> §8- §7删除坐标点
+      §f{0} warps rename <坐标点> <新名称> §8- §7重命名坐标点
+      §f{0} warps disown <坐标点> §8- §7解除坐标点所有权
+      §f{0} warps alias <别名> <原坐标点> §8- §7创建坐标点别名
+      §f{0} warps rmalias <别名> §8- §7删除坐标点别名
+    §b分类§r
+      §f{0} categories add <名称> <前缀> §8- §7创建分类
+      §f{0} categories remove <名称> §8- §7删除分类 §8(§frm§8)
+      §f{0} categories list <分类> [页] §8- §7列出分类中的坐标点 §8(§fl§8)
+      §f{0} categories listc [页] §8- §7列出所有分类 §8(§flc§8)
+      §f{0} categories searchc <关键词> [页] §8- §7搜索分类 §8(§fsc§8)
+      §f{0} categories search <分类> <名称> [页] §8- §7搜索分类中的坐标点 §8(§fse§8)
+      §f{0} categories padd <分类> <名称> <x> <y> <z> <维度> §8- §7在分类中添加 / 设置坐标点
+      §f{0} categories paddhere <分类> <名称> §8- §7在当前位置添加分类坐标点
+      §f{0} categories rename <旧名称> <新名称> §8- §7重命名分类
+      §f{0} categories redef <分类> <新前缀> §8- §7修改分类前缀
+      §f{0} categories premove <分类> <坐标点> §8- §7删除分类中的坐标点 §8(§fprm§8)
+      §f{0} categories pmove <分类> <坐标点> <目标分类> §8- §7移动坐标点到另一个分类 §8(§fpmv§8)
+      §f{0} categories tag <坐标点> <分类> §8- §7手动将坐标点标记到指定分类（可多个）
+      §f{0} categories rmtag <坐标点> §8- §7移除坐标点的所有手动分类标记
+    §8提示：§7命令中的 §f[页] §7为可选参数；§f<参数> §7为必填参数。
   ask:
     spb: '传送至特殊bot可能会造成意外的死亡事件等，请使用`!!tp confirm`以确认传送'
     unknownrequest: '未知传送请求'
@@ -54,6 +69,13 @@ tpm:
     removed: '传送点 {0} 已删除'
     renamed: '传送点 {o} 已被重命名为 {n}'
     permdenied: '权限不足'
+    point_not_exists: '分类 {category} 中不存在坐标点 {point}'
+    point_removed: '已从分类 {category} 中删除坐标点 {point}'
+    point_moved: '坐标点 {o} 已移动至分类 {category}，新名称为 {n}'
+    point_tagged: '坐标点 {point} 已被标记到分类 {category}'
+    point_already_tagged: '坐标点 {point} 已经标记到分类 {category}'
+    point_tags_removed: '坐标点 {point} 的所有手动分类标记已移除'
+    point_not_tagged: '坐标点 {point} 没有手动分类标记'
     disowned: '传送点 {o} 已被无所有权化'
     notalias: '传送点 {0} 不是别名'
     alias: '传送点 {o} 的别名已创建: {n}'
@@ -61,3 +83,26 @@ tpm:
     pages: '页 {c}/{t}'
     outofpages: '你正在尝试浏览第 {c} 页, 但只有 {t} 页可用'
     mustlargerthanzero: '该数字必须比0大'
+  category:
+    pages: '页 {c}/{t}'
+    item: '§6{creator}§r: §e{name} §9- 前缀: §b{prefix}'
+    builtin: '内置'
+    created: '分类 {name} 已创建，前缀为 {prefix}:'
+    removed: '分类 {name} 已删除'
+    renamed: '分类 {o} 已被重命名为 {n}'
+    redefined: '分类 {name} 的前缀已修改为 {prefix}:'
+    exists: '分类 {0} 已存在'
+    not_exists: '分类 {0} 不存在'
+    prefix_exists: '分类前缀 {0} 已被使用'
+    full: '分类数量已达到上限 ({0})'
+    full_per_player: '您的个人分类数量已达到上限 ({count}/{limit})'
+    overlength: '分类名称最大长度为32，前缀最大长度为31'
+    invalid_name: '无效的分类名称'
+    invalid_prefix: '无效的分类前缀：不能为空且不能包含 ":"'
+    reserved_name: '分类名称 other 保留给未分类坐标点'
+    permdenied: '权限不足'
+    point_not_exists: '分类 {category} 中不存在坐标点 {point}'
+    point_removed: '已从分类 {category} 中删除坐标点 {point}'
+    point_moved: '坐标点 {o} 已移动至分类 {category}，新名称为 {n}'
+    point_tagged: '坐标点 {point} 已被标记到分类 {category}'
+    point_already_tagged: '坐标点 {point} 已经标记到分类 {category}'

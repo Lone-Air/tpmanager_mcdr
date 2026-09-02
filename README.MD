@@ -15,6 +15,10 @@
 - add more commands to `!!tp warps` sub-node
 - paginated `!!tp list`
 - add `!!tp search`
+- add commands for categories
+- add category management, including creation, removal, listing, searching, renaming, prefix redefinition, and moving warp points between categories
+- add manual category tags; a warp point can be manually tagged to multiple categories, with tags persisted in `categories.json`
+- add `!!tp categories rmtag <warp_point>` to remove all manual category tags from a warp point
 ## Dependencies
 
 | ID | Release Link |
@@ -46,8 +50,43 @@
 | `!!tp warps disown <point>` | Disown a warp point |
 | `!!tp warps alias <alias> <original>` | Create an alias of a warp point |
 | `!!tp warps rmalias <alias>` | Remove an alias of a warp point not directly remove the warp point |
+| `!!tp categories add <name> <prefix>` | Create a category |
+| `!!tp categories remove <name>` | Remove a category, aka `!!tp categories rm` |
+| `!!tp categories list <category> [page]` | List warp points in a category, aka `!!tp categories l` |
+| `!!tp categories listc [page]` | List all categories, aka `!!tp categories lc` |
+| `!!tp categories searchc <keyword> [page]` | Search categories, aka `!!tp categories sc` |
+| `!!tp categories search <category> <name> [page]` | Search warp points in a category, aka `!!tp categories se` |
+| `!!tp categories padd <category> <name> <x> <y> <z> <dimension>` | Add / set a warp point in a category |
+| `!!tp categories paddhere <category> <name>` | Add a warp point here in a category |
+| `!!tp categories rename <old> <new>` | Rename a category, aka `!!tp categories re` |
+| `!!tp categories redef <category> <new_prefix>` | Change a category prefix |
+| `!!tp categories premove <category> <point>` | Remove a warp point from a category, aka `!!tp categories prm` |
+| `!!tp categories pmove <category> <point> <target_category>` | Move a warp point to another category, aka `!!tp categories pmv` |
+| `!!tp categories tag <warp_point> <category>` | Manually tag a warp point into a category (multiple allowed) |
+| `!!tp categories rmtag <warp_point>` | Remove all manual category tags from a warp point |
 
 ## Config files
+
+#### tpm/categories.json
+
+Category configuration and manual category tags are stored in this file. The `tags` object maps each warp point to a list of manually assigned categories, so one warp point can belong to multiple manually tagged categories.
+
+```json
+{
+    "categories": [
+        {
+            "name": "main",
+            "prefix": "main"
+        }
+    ],
+    "tags": {
+        "spawn": ["main", "public"],
+        "home": ["survival"]
+    }
+}
+```
+
+Manual tags take precedence over automatic prefix-based category detection. Removing a category also removes its manual tags.
 
 #### tpm/config.json
 
@@ -72,7 +111,22 @@
         "warp_rename": 1,
         "warp_disown": 1,
         "warp_alias": 1,
-        "warp_rmalias": 1
+        "warp_rmalias": 1,
+        "category_add": 1,
+        "category_remove": 1,
+        "category_list": 1,
+        "category_listc": 1,
+        "category_search": 1,
+        "category_searchc": 1,
+        "category_padd": 2,
+        "category_paddhere": 2,
+        "category_rename": 1,
+        "category_redef": 1,
+        "category_premove": 1,
+        "category_pmove": 1,
+        "category_tag": 1,
+        "category_rmtag": 1,
+        "category_config": 3
     },
     "teleport_cooldown": 60, // in sec, the minimum teleport operation interval
     "teleport_expiration": 10, // in sec, the teleport request expiration
